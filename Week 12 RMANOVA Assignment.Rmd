@@ -50,7 +50,7 @@ The rio package works for importing several different types of data files. We're
 # Using the file.choose() command allows you to select a file to import from another folder.
 dataset <- rio::import(file.choose())
 # This command will allow us to import a file included in our project folder.
-# dataset <- rio::import("Album Sales.sav")
+# dataset <- rio::import("Bushtucker.sav")
 ```
 
 ## Get R code from Jamovi output
@@ -61,6 +61,49 @@ You can get the R code for most of the analyses you do in Jamovi.
 2. Click on the Syndax mode check box at the bottom of the Results section.
 3. Close the Settings window by clicking on the Hide Settings arrow at the top right of the settings menu.
 4. you should now see the R code for each of the analyses you just ran.
+
+```{r}
+output = jmv::anovaRM(
+    data = dataset,
+    rm = list(
+        list(
+            label="Food",
+            levels=c(
+                "stick",
+                "testicle",
+                "eye",
+                "witchetty"))),
+    rmCells = list(
+        list(
+            measure="stick",
+            cell="stick"),
+        list(
+            measure="testicle",
+            cell="testicle"),
+        list(
+            measure="eye",
+            cell="eye"),
+        list(
+            measure="witchetty",
+            cell="witchetty")),
+    effectSize = c("ges", "eta", "partEta"),
+    depLabel = "Seconds",
+    rmTerms = ~ Food,
+    spherTests = TRUE,
+    spherCorr = c("none", "GG", "HF"),
+    postHoc = list(
+        "Food"),
+    postHocCorr = c(
+        "bonf",
+        "none",
+        "tukey",
+        "scheffe",
+        "holm"),
+    emMeans = ~ Food,
+    emmTables = TRUE)
+
+output
+```
 
 
 #### Visualization with ggplot
